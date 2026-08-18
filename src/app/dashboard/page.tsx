@@ -320,7 +320,7 @@ export default function DashboardPage() {
                 Descargar asistencia:
               </span>
             </div>
-            <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3">
+            <div className="flex flex-col items-center sm:items-end gap-3">
               <div className="flex items-center gap-2">
                 <label className="text-xs text-gray-500">Desde</label>
                 <input
