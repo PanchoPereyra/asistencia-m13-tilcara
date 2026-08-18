@@ -320,21 +320,25 @@ export default function DashboardPage() {
                 Descargar asistencia
               </span>
             </div>
-            <div className="flex items-center gap-2 text-sm">
-              <label className="text-gray-500">Desde</label>
-              <input
-                type="date"
-                value={fechaDesde}
-                onChange={(e) => setFechaDesde(e.target.value)}
-                className="border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:ring-2 focus:ring-green-500 outline-none"
-              />
-              <label className="text-gray-500">Hasta</label>
-              <input
-                type="date"
-                value={fechaHasta}
-                onChange={(e) => setFechaHasta(e.target.value)}
-                className="border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:ring-2 focus:ring-green-500 outline-none"
-              />
+            <div className="flex flex-col sm:flex-row items-center gap-2 text-sm">
+              <div className="flex items-center gap-1">
+                <label className="text-gray-500">Desde</label>
+                <input
+                  type="date"
+                  value={fechaDesde}
+                  onChange={(e) => setFechaDesde(e.target.value)}
+                  className="border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:ring-2 focus:ring-green-500 outline-none"
+                />
+              </div>
+              <div className="flex items-center gap-1">
+                <label className="text-gray-500">Hasta</label>
+                <input
+                  type="date"
+                  value={fechaHasta}
+                  onChange={(e) => setFechaHasta(e.target.value)}
+                  className="border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:ring-2 focus:ring-green-500 outline-none"
+                />
+              </div>
             </div>
             <div className="flex gap-3">
               <button
