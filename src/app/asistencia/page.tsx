@@ -164,7 +164,7 @@ export default function AsistenciaPage() {
                 ✓ {presentes} presentes
               </span>
               <span className="text-red-600 font-bold">
-                🤕 {lesiones} lesionados
+                {lesiones} lesionados
               </span>
               <span className="text-gray-500">
                 {jugadores.length} total
@@ -235,7 +235,7 @@ export default function AsistenciaPage() {
                     <span className="text-xs text-gray-500">
                       {asistencia[jugador.id]?.lesionado
                         ? "Lesionado"
-                        : "OK"}
+                        : "No lesionado"}
                     </span>
                   </div>
                 </div>
