@@ -320,7 +320,7 @@ export default function DashboardPage() {
                 Descargar asistencia:
               </span>
             </div>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3">
               <div className="flex items-center gap-2">
                 <label className="text-xs text-gray-500">Desde</label>
                 <input
@@ -339,20 +339,22 @@ export default function DashboardPage() {
                   className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none"
                 />
               </div>
-              <button
-                onClick={exportarExcel}
-                className="flex items-center gap-1 bg-green-50 text-green-700 hover:bg-green-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
-              >
-                <FileSpreadsheet size={16} />
-                Excel
-              </button>
-              <button
-                onClick={exportarPDF}
-                className="flex items-center gap-1 bg-red-50 text-red-700 hover:bg-red-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
-              >
-                <FileText size={16} />
-                PDF
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={exportarExcel}
+                  className="flex items-center gap-1 bg-green-50 text-green-700 hover:bg-green-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                >
+                  <FileSpreadsheet size={16} />
+                  Excel
+                </button>
+                <button
+                  onClick={exportarPDF}
+                  className="flex items-center gap-1 bg-red-50 text-red-700 hover:bg-red-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                >
+                  <FileText size={16} />
+                  PDF
+                </button>
+              </div>
             </div>
           </div>
         </div>
