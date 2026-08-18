@@ -235,7 +235,7 @@ export default function AsistenciaPage() {
                     <span className="text-xs text-gray-500">
                       {asistencia[jugador.id]?.lesionado
                         ? "Lesionado"
-                        : "No lesionado"}
+                        : "No Lesionado"}
                     </span>
                   </div>
                 </div>
