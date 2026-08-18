@@ -1,0 +1,22 @@
+{
+  "name": "Asistencia M13 - Club Tilcara",
+  "short_name": "Asistencia Tilcara",
+  "description": "Sistema de asistencia para la categoría M13 de rugby del Club Tilcara",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#16a34a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo-tilcara.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo-tilcara.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
