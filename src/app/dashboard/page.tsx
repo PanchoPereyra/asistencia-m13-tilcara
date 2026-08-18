@@ -313,48 +313,45 @@ export default function DashboardPage() {
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex flex-col items-center gap-3">
             <div className="flex items-center gap-2">
               <Calendar size={18} className="text-gray-500" />
               <span className="text-sm font-medium text-gray-700">
-                Descargar asistencia:
+                Descargar asistencia
               </span>
             </div>
-            <div className="flex flex-col items-center sm:items-end gap-3">
-              <div className="flex items-center gap-2">
-                <label className="text-xs text-gray-500">Desde</label>
-                <input
-                  type="date"
-                  value={fechaDesde}
-                  onChange={(e) => setFechaDesde(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none"
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <label className="text-xs text-gray-500">Hasta</label>
-                <input
-                  type="date"
-                  value={fechaHasta}
-                  onChange={(e) => setFechaHasta(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none"
-                />
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={exportarExcel}
-                  className="flex items-center gap-1 bg-green-50 text-green-700 hover:bg-green-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
-                >
-                  <FileSpreadsheet size={16} />
-                  Excel
-                </button>
-                <button
-                  onClick={exportarPDF}
-                  className="flex items-center gap-1 bg-red-50 text-red-700 hover:bg-red-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
-                >
-                  <FileText size={16} />
-                  PDF
-                </button>
-              </div>
+            <div className="flex items-center gap-2 text-sm">
+              <label className="text-gray-500">Desde</label>
+              <input
+                type="date"
+                value={fechaDesde}
+                onChange={(e) => setFechaDesde(e.target.value)}
+                className="border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:ring-2 focus:ring-green-500 outline-none"
+              />
+              <label className="text-gray-500">Hasta</label>
+              <input
+                type="date"
+                value={fechaHasta}
+                onChange={(e) => setFechaHasta(e.target.value)}
+                className="border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:ring-2 focus:ring-green-500 outline-none"
+              />
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={exportarExcel}
+                className="flex items-center gap-1 bg-green-50 text-green-700 hover:bg-green-100 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                <FileSpreadsheet size={16} />
+                Excel
+              </button>
+              <button
+                onClick={exportarPDF}
+                className="flex items-center gap-1 bg-red-50 text-red-700 hover:bg-red-100 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                <FileText size={16} />
+                PDF
+              </button>
+            </div>
             </div>
           </div>
         </div>
