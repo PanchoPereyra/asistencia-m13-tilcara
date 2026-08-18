@@ -352,7 +352,6 @@ export default function DashboardPage() {
                 PDF
               </button>
             </div>
-            </div>
           </div>
         </div>
 
