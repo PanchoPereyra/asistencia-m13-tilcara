@@ -213,7 +213,19 @@ export default function DashboardPage() {
       .lte("fecha", fechaHasta)
       .order("fecha");
 
-    const rows = (data || []).map((a) => ({
+    const registros = data || [];
+    const totalPresentes = registros.filter((a) => a.presente).length;
+    const totalLesionados = registros.filter((a) => a.lesionado).length;
+    const totalAusentes = registros.length - totalPresentes;
+
+    const resumen = [
+      { Fecha: "", Nombre: "", Apellido: "", "Nro Camiseta": "", Estado: `Presentes: ${totalPresentes}` },
+      { Fecha: "", Nombre: "", Apellido: "", "Nro Camiseta": "", Estado: `Lesionados: ${totalLesionados}` },
+      { Fecha: "", Nombre: "", Apellido: "", "Nro Camiseta": "", Estado: `Ausentes: ${totalAusentes}` },
+      { Fecha: "", Nombre: "", Apellido: "", "Nro Camiseta": "", Estado: "" },
+    ];
+
+    const rows = registros.map((a) => ({
       Fecha: a.fecha,
       Nombre: a.jugadores?.nombre || "",
       Apellido: a.jugadores?.apellido || "",
@@ -225,7 +237,7 @@ export default function DashboardPage() {
         : "Ausente",
     }));
 
-    const ws = XLSX.utils.json_to_sheet(rows);
+    const ws = XLSX.utils.json_to_sheet([...resumen, ...rows]);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Asistencia");
     XLSX.writeFile(wb, `asistencia_${fechaDesde}_al_${fechaHasta}.xlsx`);
@@ -239,13 +251,20 @@ export default function DashboardPage() {
       .lte("fecha", fechaHasta)
       .order("fecha");
 
+    const registros = data || [];
+    const totalPresentes = registros.filter((a) => a.presente).length;
+    const totalLesionados = registros.filter((a) => a.lesionado).length;
+    const totalAusentes = registros.length - totalPresentes;
+
     const doc = new jsPDF();
     doc.setFontSize(16);
     doc.text("Asistencia M13 - Club Tilcara", 14, 20);
     doc.setFontSize(11);
     doc.text(`Desde: ${fechaDesde}  Hasta: ${fechaHasta}`, 14, 28);
+    doc.setFontSize(10);
+    doc.text(`Presentes: ${totalPresentes}  |  Lesionados: ${totalLesionados}  |  Ausentes: ${totalAusentes}`, 14, 35);
 
-    const rows = (data || []).map((a) => [
+    const rows = registros.map((a) => [
       a.fecha,
       a.jugadores?.nombre || "",
       a.jugadores?.apellido || "",
@@ -254,11 +273,23 @@ export default function DashboardPage() {
     ]);
 
     autoTable(doc, {
-      startY: 35,
+      startY: 40,
       head: [["Fecha", "Nombre", "Apellido", "Nro", "Estado"]],
       body: rows,
       styles: { fontSize: 8 },
       headStyles: { fillColor: [22, 163, 74] },
+      didParseCell: function (data) {
+        if (data.section === "body") {
+          const estado = (data.row.raw as string[])[4];
+          if (estado === "Presente") {
+            data.cell.styles.fillColor = [220, 252, 231];
+            data.cell.styles.textColor = [22, 101, 52];
+          } else if (estado === "Lesionado") {
+            data.cell.styles.fillColor = [254, 226, 226];
+            data.cell.styles.textColor = [153, 27, 27];
+          }
+        }
+      },
     });
 
     doc.save(`asistencia_${fechaDesde}_al_${fechaHasta}.pdf`);
