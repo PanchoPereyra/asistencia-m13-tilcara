@@ -18,7 +18,7 @@ export default function AsistenciaPage() {
   const [asistencia, setAsistencia] = useState<
     Record<string, { presente: boolean; lesionado: boolean }>
   >({});
-  const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
+  const [fecha, setFecha] = useState("");
   const [loading, setLoading] = useState(true);
   const [guardando, setGuardando] = useState(false);
   const [mensaje, setMensaje] = useState("");
@@ -29,8 +29,15 @@ export default function AsistenciaPage() {
       router.push("/");
       return;
     }
-    cargarJugadores();
-  }, [router, fecha]);
+    const hoy = new Date().toISOString().split("T")[0];
+    setFecha(hoy);
+  }, [router]);
+
+  useEffect(() => {
+    if (fecha) {
+      cargarJugadores();
+    }
+  }, [fecha]);
 
   async function cargarJugadores() {
     setLoading(true);

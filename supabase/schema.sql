@@ -62,6 +62,7 @@ CREATE POLICY "Acceso total usuarios" ON usuarios FOR ALL USING (true);
 INSERT INTO usuarios (email, nombre, rol) VALUES
   ('entrenador@tilcara.com', 'Entrenador Principal', 'admin'),
   ('ayudante@tilcara.com', 'Ayudante', 'staff')
+  ('staff@tilcara.com', 'Staff', 'admin'),
 ON CONFLICT (email) DO NOTHING;
 
 -- Jugadores de ejemplo (25+ jugadores M13)
