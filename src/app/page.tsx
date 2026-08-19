@@ -12,8 +12,13 @@ export default function LoginPage() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
 
   useEffect(() => {
+    const usuario = localStorage.getItem("usuario");
+    if (usuario) {
+      router.push("/dashboard");
+      return;
+    }
     checkUsuarios();
-  }, []);
+  }, [router]);
 
   async function checkUsuarios() {
     const { data } = await supabase.from("usuarios").select("*");

@@ -22,7 +22,7 @@ export const supabase = new Proxy({} as SupabaseClient, {
 });
 
 export type Jugador = {
-  id: string;
+  id: number;
   nombre: string;
   apellido: string;
   fecha_nacimiento: string | null;
@@ -33,17 +33,18 @@ export type Jugador = {
 };
 
 export type Asistencia = {
-  id: string;
-  jugador_id: string;
+  id: number;
+  jugador_id: number;
   fecha: string;
   presente: boolean;
   lesionado: boolean;
   observaciones: string | null;
+  cargado_por: string | null;
   created_at: string;
 };
 
 export type Usuario = {
-  id: string;
+  id: number;
   email: string;
   nombre: string;
   rol: "admin" | "staff";

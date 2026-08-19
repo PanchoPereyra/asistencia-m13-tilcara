@@ -48,8 +48,8 @@ export default function DashboardPage() {
   const [fechaHasta, setFechaHasta] = useState("");
   const [fechaConsulta, setFechaConsulta] = useState("");
   const [consultaResult, setConsultaResult] = useState<{
-    presentes: (Jugador & { observaciones: string | null })[];
-    lesionados: (Jugador & { observaciones: string | null })[];
+    presentes: (Jugador & { observaciones: string | null; cargado_por: string | null })[];
+    lesionados: (Jugador & { observaciones: string | null; cargado_por: string | null })[];
     ausentes: Jugador[];
   }>({ presentes: [], lesionados: [], ausentes: [] });
   const [consultando, setConsultando] = useState(false);
@@ -86,27 +86,28 @@ export default function DashboardPage() {
 
     const jugadores = jugadoresData || [];
     const asistenciaMap: Record<
-      string,
-      { presente: boolean; lesionado: boolean; observaciones: string | null }
+      number,
+      { presente: boolean; lesionado: boolean; observaciones: string | null; cargado_por: string | null }
     > = {};
     (asistenciaData || []).forEach((a: Asistencia) => {
       asistenciaMap[a.jugador_id] = {
         presente: a.presente,
         lesionado: a.lesionado,
         observaciones: a.observaciones,
+        cargado_por: a.cargado_por,
       };
     });
 
-    const presentes: (Jugador & { observaciones: string | null })[] = [];
-    const lesionados: (Jugador & { observaciones: string | null })[] = [];
+    const presentes: (Jugador & { observaciones: string | null; cargado_por: string | null })[] = [];
+    const lesionados: (Jugador & { observaciones: string | null; cargado_por: string | null })[] = [];
     const ausentes: Jugador[] = [];
 
     jugadores.forEach((j) => {
       const a = asistenciaMap[j.id];
       if (a?.lesionado) {
-        lesionados.push({ ...j, observaciones: a.observaciones });
+        lesionados.push({ ...j, observaciones: a.observaciones, cargado_por: a.cargado_por });
       } else if (a?.presente) {
-        presentes.push({ ...j, observaciones: a.observaciones });
+        presentes.push({ ...j, observaciones: a.observaciones, cargado_por: a.cargado_por });
       } else {
         ausentes.push(j);
       }
@@ -158,7 +159,7 @@ export default function DashboardPage() {
       .gte("fecha", fechaDesde);
 
     const conteoAsistencia: Record<
-      string,
+      number,
       { nombre: string; total: number }
     > = {};
     (
@@ -529,6 +530,13 @@ export default function DashboardPage() {
                   <X size={14} /> {consultaResult.ausentes.length} ausentes
                 </span>
               </div>
+
+              {/* Cargado por */}
+              {consultaResult.presentes.length > 0 && consultaResult.presentes[0].cargado_por && (
+                <p className="text-xs text-gray-400 mb-4">
+                  Cargado por: <span className="font-medium text-gray-500">{consultaResult.presentes[0].cargado_por}</span>
+                </p>
+              )}
 
               {/* Presentes */}
               {consultaResult.presentes.length > 0 && (

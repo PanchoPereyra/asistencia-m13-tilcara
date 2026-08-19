@@ -16,7 +16,7 @@ export default function AsistenciaPage() {
   const router = useRouter();
   const [jugadores, setJugadores] = useState<Jugador[]>([]);
   const [asistencia, setAsistencia] = useState<
-    Record<string, { presente: boolean; lesionado: boolean }>
+    Record<number, { presente: boolean; lesionado: boolean }>
   >({});
   const [fecha, setFecha] = useState("");
   const [loading, setLoading] = useState(true);
@@ -59,7 +59,7 @@ export default function AsistenciaPage() {
         .eq("fecha", fecha);
 
       const asistenciaMap: Record<
-        string,
+        number,
         { presente: boolean; lesionado: boolean }
       > = {};
       (asistenciaData || []).forEach((a: Asistencia) => {
@@ -74,7 +74,7 @@ export default function AsistenciaPage() {
     setLoading(false);
   }
 
-  function togglePresente(jugadorId: string) {
+  function togglePresente(jugadorId: number) {
     setAsistencia((prev) => ({
       ...prev,
       [jugadorId]: {
@@ -84,7 +84,7 @@ export default function AsistenciaPage() {
     }));
   }
 
-  function toggleLesionado(jugadorId: string) {
+  function toggleLesionado(jugadorId: number) {
     setAsistencia((prev) => ({
       ...prev,
       [jugadorId]: {
@@ -98,11 +98,15 @@ export default function AsistenciaPage() {
     setGuardando(true);
     setMensaje("");
 
+    const usuarioLogueado = JSON.parse(localStorage.getItem("usuario") || "{}");
+    const nombreUsuario = usuarioLogueado?.nombre || "Desconocido";
+
     const registros = jugadores.map((j) => ({
       jugador_id: j.id,
       fecha,
       presente: asistencia[j.id]?.presente || false,
       lesionado: asistencia[j.id]?.lesionado || false,
+      cargado_por: nombreUsuario,
     }));
 
     // Upsert: insertar o actualizar

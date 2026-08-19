@@ -35,7 +35,7 @@ export default function JugadoresPage() {
   const [jugadores, setJugadores] = useState<Jugador[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [editando, setEditando] = useState<string | null>(null);
+  const [editando, setEditando] = useState<number | null>(null);
   const [form, setForm] = useState<FormData>(initialForm);
   const [guardando, setGuardando] = useState(false);
   const [mensaje, setMensaje] = useState("");
@@ -138,7 +138,7 @@ export default function JugadoresPage() {
     }
   }
 
-  async function eliminarJugador(id: string) {
+  async function eliminarJugador(id: number) {
     if (!confirm("¿Estás seguro de eliminar este jugador?")) return;
 
     const { error } = await supabase.from("jugadores").delete().eq("id", id);

@@ -4,7 +4,7 @@
 
 -- Tabla de jugadores
 CREATE TABLE IF NOT EXISTS jugadores (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   nombre TEXT NOT NULL,
   apellido TEXT NOT NULL,
   fecha_nacimiento DATE,
@@ -16,19 +16,20 @@ CREATE TABLE IF NOT EXISTS jugadores (
 
 -- Tabla de asistencia
 CREATE TABLE IF NOT EXISTS asistencia (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  jugador_id UUID REFERENCES jugadores(id) ON DELETE CASCADE,
+  id SERIAL PRIMARY KEY,
+  jugador_id INTEGER REFERENCES jugadores(id) ON DELETE CASCADE,
   fecha DATE NOT NULL,
   presente BOOLEAN DEFAULT false,
   lesionado BOOLEAN DEFAULT false,
   observaciones TEXT,
+  cargado_por TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   UNIQUE(jugador_id, fecha)
 );
 
 -- Tabla de usuarios (staff)
 CREATE TABLE IF NOT EXISTS usuarios (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   nombre TEXT NOT NULL,
   rol TEXT DEFAULT 'staff' CHECK (rol IN ('admin', 'staff')),
@@ -61,8 +62,8 @@ CREATE POLICY "Acceso total usuarios" ON usuarios FOR ALL USING (true);
 -- Usuarios de ejemplo
 INSERT INTO usuarios (email, nombre, rol) VALUES
   ('entrenador@tilcara.com', 'Entrenador Principal', 'admin'),
-  ('ayudante@tilcara.com', 'Ayudante', 'staff')
-  ('staff@tilcara.com', 'Staff', 'admin'),
+  ('ayudante@tilcara.com', 'Ayudante', 'staff'),
+  ('staff@tilcara.com', 'Staff', 'admin')
 ON CONFLICT (email) DO NOTHING;
 
 -- Jugadores de ejemplo (25+ jugadores M13)
