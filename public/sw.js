@@ -1,62 +1,22 @@
-const CACHE_NAME = "tilcara-cache-v1";
-
-self.addEventListener("install", (event) => {
+// Service worker de limpieza: se desregistra a sí mismo y borra las cachés
+// existentes. Es necesario mantenerlo un tiempo para que los dispositivos que
+// ya tenían el SW viejo instalado queden limpios automáticamente.
+self.addEventListener("install", () => {
   self.skipWaiting();
-
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
-  );
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
-      );
-    }).then(() => self.clients.claim())
+    (async () => {
+      const cacheNames = await caches.keys();
+      await Promise.all(cacheNames.map((name) => caches.delete(name)));
+      await self.registration.unregister();
+      const clientList = await self.clients.matchAll({ type: "window" });
+      for (const client of clientList) {
+        if ("navigate" in client) {
+          client.navigate(client.url);
+        }
+      }
+    })()
   );
 });
-
-self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        return response;
-      })
-      .catch(() => caches.match(event.request))
-  );
-});
-
-
-
-// const CACHE_NAME = "asistencia-tilcara-v1";
-// const urlsToCache = ["/", "/dashboard", "/asistencia", "/jugadores"];
-
-// self.addEventListener("install", (event) => {
-//   event.waitUntil(
-//     caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
-//   );
-// });
-
-// self.addEventListener("fetch", (event) => {
-//   event.respondWith(
-//     caches.match(event.request).then((response) => {
-//       return response || fetch(event.request);
-//     })
-//   );
-// });
-
-// self.addEventListener("activate", (event) => {
-//   event.waitUntil(
-//     caches.keys().then((cacheNames) => {
-//       return Promise.all(
-//         cacheNames
-//           .filter((name) => name !== CACHE_NAME)
-//           .map((name) => caches.delete(name))
-//       );
-//     })
-//   );
-// });
