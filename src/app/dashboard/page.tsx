@@ -48,8 +48,8 @@ export default function DashboardPage() {
   const [fechaHasta, setFechaHasta] = useState("");
   const [fechaConsulta, setFechaConsulta] = useState("");
   const [consultaResult, setConsultaResult] = useState<{
-    presentes: (Jugador & { observaciones: string | null; cargado_por: string | null })[];
-    lesionados: (Jugador & { observaciones: string | null; cargado_por: string | null })[];
+    presentes: (Jugador & { observaciones: string | null; cargado_por: string | null; lesionado: boolean })[];
+    lesionados: (Jugador & { observaciones: string | null; cargado_por: string | null; presente: boolean })[];
     ausentes: Jugador[];
   }>({ presentes: [], lesionados: [], ausentes: [] });
   const [consultando, setConsultando] = useState(false);
@@ -98,17 +98,23 @@ export default function DashboardPage() {
       };
     });
 
-    const presentes: (Jugador & { observaciones: string | null; cargado_por: string | null })[] = [];
-    const lesionados: (Jugador & { observaciones: string | null; cargado_por: string | null })[] = [];
+    const presentes: (Jugador & { observaciones: string | null; cargado_por: string | null; lesionado: boolean })[] = [];
+    const lesionados: (Jugador & { observaciones: string | null; cargado_por: string | null; presente: boolean })[] = [];
     const ausentes: Jugador[] = [];
 
     jugadores.forEach((j) => {
       const a = asistenciaMap[j.id];
-      if (a?.lesionado) {
-        lesionados.push({ ...j, observaciones: a.observaciones, cargado_por: a.cargado_por });
-      } else if (a?.presente) {
-        presentes.push({ ...j, observaciones: a.observaciones, cargado_por: a.cargado_por });
-      } else {
+      if (!a) {
+        ausentes.push(j);
+        return;
+      }
+      if (a.lesionado) {
+        lesionados.push({ ...j, observaciones: a.observaciones, cargado_por: a.cargado_por, presente: a.presente });
+      }
+      if (a.presente) {
+        presentes.push({ ...j, observaciones: a.observaciones, cargado_por: a.cargado_por, lesionado: a.lesionado });
+      }
+      if (!a.lesionado && !a.presente) {
         ausentes.push(j);
       }
     });
@@ -230,11 +236,14 @@ export default function DashboardPage() {
       Nombre: a.jugadores?.nombre || "",
       Apellido: a.jugadores?.apellido || "",
       "Nro Camiseta": a.jugadores?.numero_camiseta || "",
-      Estado: a.lesionado
-        ? "Lesionado"
-        : a.presente
-        ? "Presente"
-        : "Ausente",
+      Estado:
+        a.lesionado && a.presente
+          ? "Presente y Lesionado"
+          : a.lesionado
+          ? "Lesionado"
+          : a.presente
+          ? "Presente"
+          : "Ausente",
     }));
 
     const ws = XLSX.utils.json_to_sheet([...resumen, ...rows]);
@@ -269,7 +278,13 @@ export default function DashboardPage() {
       a.jugadores?.nombre || "",
       a.jugadores?.apellido || "",
       String(a.jugadores?.numero_camiseta || ""),
-      a.lesionado ? "Lesionado" : a.presente ? "Presente" : "Ausente",
+      a.lesionado && a.presente
+        ? "Presente y Lesionado"
+        : a.lesionado
+        ? "Lesionado"
+        : a.presente
+        ? "Presente"
+        : "Ausente",
     ]);
 
     autoTable(doc, {
@@ -287,6 +302,9 @@ export default function DashboardPage() {
           } else if (estado === "Lesionado") {
             data.cell.styles.fillColor = [254, 226, 226];
             data.cell.styles.textColor = [153, 27, 27];
+          } else if (estado === "Presente y Lesionado") {
+            data.cell.styles.fillColor = [254, 243, 199];
+            data.cell.styles.textColor = [146, 64, 14];
           }
         }
       },
@@ -582,7 +600,15 @@ export default function DashboardPage() {
                           {j.numero_camiseta || "?"}
                         </div>
                         <div className="flex-1">
-                          <p className="text-sm font-medium">{j.nombre} {j.apellido}</p>
+                          <p className="text-sm font-medium flex items-center gap-2 flex-wrap">
+                            {j.nombre} {j.apellido}
+                            {j.lesionado && (
+                              <span className="inline-flex items-center gap-1 bg-red-100 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                <AlertTriangle size={10} />
+                                Lesionado
+                              </span>
+                            )}
+                          </p>
                           <p className="text-xs text-gray-400">{j.posicion || "Sin posición"}</p>
                         </div>
                         <Check size={16} className="text-green-500" />
@@ -605,7 +631,15 @@ export default function DashboardPage() {
                           {j.numero_camiseta || "?"}
                         </div>
                         <div className="flex-1">
-                          <p className="text-sm font-medium">{j.nombre} {j.apellido}</p>
+                          <p className="text-sm font-medium flex items-center gap-2 flex-wrap">
+                            {j.nombre} {j.apellido}
+                            {j.presente && (
+                              <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                <Check size={10} />
+                                Presente
+                              </span>
+                            )}
+                          </p>
                           <p className="text-xs text-gray-400">{j.posicion || "Sin posición"}</p>
                         </div>
                         <AlertTriangle size={16} className="text-red-500" />
